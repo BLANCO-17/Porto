@@ -19,5 +19,8 @@
   "homepage": "https://github.com/BrainXIX/Porto#readme",
   "devDependencies": {
     "electron": "^15.0.0"
+  },
+  "dependencies": {
+    "electron-titlebar": "0.0.3"
   }
 }

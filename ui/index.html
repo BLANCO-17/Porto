@@ -1,8 +1,21 @@
 <html>
     <head>
         <link rel="stylesheet" href="index.css">
+        <script src="win_handler.js"></script>
+        <div class="tbar">
+            <div class="dragbar"></div>
+            <div class="barbtn" onclick="MinWindow()">_</div>
+            <div class="barbtn" onclick="MaxWindow()">|_|</div>
+            <div class="barbtn closebtn" style="border-top-right-radius: 10px;" onclick="closeWindow()">X</div>
+        </div>
     </head>
     <body>
-        <div class="tbar"></div>
+        
+        <div class="main">
+            <div class="sidebar" id="sbar">
+                <div class="mbtn" id="menubtn"><p>=</p></div>
+            </div>        
+        </div>
+        <script src="ui_handler.js"></script>
     </body>
 </html>

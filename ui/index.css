@@ -1,21 +1,75 @@
 body {
-    /* transform: scale(0.9); */
     overflow: hidden;
     margin: 0;    
-    border: 0.5px solid rgba(255, 255, 255, 0.466);
+    border: 0.5px solid rgba(255, 255, 255, 0.25);
     border-radius: 10px;
-    font-family:Verdana;
-    /* background-color: aliceblue; */
+    font-family:Verdana;    
+    /* -webkit-app-region: no drag;     */    
 }
-
 
 .tbar{
     top: 0;
+    display: flex;
     position: fixed;
+    float: right;
     width: 100%;
     height: 2rem;
-    background-color: rgb(40, 40, 51);
-    /* display: inline-flex; */
+    border-top-left-radius: 10px;    
+}
+
+.tbar .dragbar{    
+    border-top-left-radius: 10px;
+    width: 100%;
+    height: 2rem;
+    background-color: rgb(40, 40, 50);
     border-radius: inherit;
-    -webkit-app-region: drag;    
+    -webkit-app-region: drag;  
+    margin-right: 0;
+    /* display: inline-flex; */
+}
+.barbtn{
+    height: inherit;
+    width: 3rem;
+    background-color: rgb(40, 40, 50);   
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    color: white;
+    transition: ease-in-out 0.25s;
+}
+.barbtn:hover{
+    background-color: rgb(56, 56, 56);
+}
+.closebtn:hover{
+    background-color: red;
+}
+
+.main{
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(180deg, rgba(15,23,73,1) 0%, rgb(70, 38, 121) 100%);
+}
+
+.sidebar{
+    margin-top: 2rem;
+    height: 100%;
+    width: 10%;
+    background-color: rgb(10, 25, 65);
+    display: inline-flex;
+    transition: ease-in-out 0.25s;
+}
+.sidebar .mbtn{
+    display: flex;
+    width: 100%;
+    height: 5rem;
+    background-color: blueviolet;
+    justify-content: center;
+    align-items: center;
+}
+
+.sidebar.active{
+    width: 20%;
 }
