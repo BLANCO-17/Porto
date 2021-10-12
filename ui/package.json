@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron ."
+    "test": "echo \"Error: no test specified\" && exit 1",    
+    "start": "concurrently \"electron .\"  \"python ../src/backend_handler.py\" "
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,6 @@
     "electron": "^15.0.0"
   },
   "dependencies": {
-    "electron-titlebar": "0.0.3"
+    "concurrently": "^6.2.1"
   }
 }
