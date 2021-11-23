@@ -1,58 +1,150 @@
 <html>
-    <head>
-        <link rel="stylesheet" href="index.css">
-        <script src="win_handler.js"></script>
-        <div class="tbar">
-            <div class="dragbar"></div>
-            <div class="barbtn" onclick="MinWindow()">_</div>
-            <div class="barbtn" onclick="MaxWindow()">|_|</div>
-            <div class="barbtn closebtn" style="border-top-right-radius: 10px;" onclick="closeWindow()">X</div>
+  <head>
+      <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta charset="UTF-8">
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="additemWin.css">
+    <script src="scripts/window_events.js"></script>
+    <script src="scripts/ui_handler.js"></script>
+    <script src="scripts/api_handler.js"></script>
+
+    <div class="tbar glass">
+        <div class="dragbar"></div>
+        <div class="barbtn" onclick="MinWindow()">&#10554</div>
+        <div class="barbtn" onclick="MaxWindow()">&#10064</div>
+        <div class="barbtn closebtn" onclick="closeWindow()">&#10005</div>
+    </div>            
+  </head>
+
+  <body>
+
+    <!-- MAINVIEWPORT WINDOW -->
+    <div class="mainviewport" id="mainwindow">
+
+      <!-- SIDEBAR -->
+      <div class="sidebar" id='sdb' onmouseenter="toggle_sidebar()" onmouseleave="toggle_sidebar()">
+        <div class="tab">
+          <img class="icon" src="icons/home.png">
+          <a class="text">HOME</a>
         </div>
-    </head>
-    <body>
-        
-        <div class="main glass">
-            <div>
-                <div class="sidebar glass" id="sbar">
-                    <div class="mbtn" id="menubtn"><p>=</p></div>
-                    <div class="tab hoverting"><span>HOME</span></div>
-                    <div class="tab hoverting">TRADES</div>
-                    <div class="tab hoverting">SETTINGS</div>
-    
-                </div>
-                <div class="userblock hoverting" id="ptab">
-                    <div class="dp">
-                    </div>
-                    <div class="userdata">
-                        <span style="" id="name_ele"></span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="container glass" id="container">
-
-                <!-- <div class="tradecard" id="">
-                    <div style="display: inline-flex; flex-flow:column; float:left; width: 75%;">
-                        <span class=itemName id="itemName">Bitcoin</span>
-                        <span class=underline id="itemAbv">BTC / USD</span>
-                        <span class=itemval id="itemVal">47000 </span>
-                        <span class=tradeval id="tradeVal">TRADE VALUE : +28700 </span>
-                        <span class=tradeqty id="tradeQty">QUANTITY : 150 </span>
-                    </div>
-                    <div style="float: right; width:25%; height:50%;">
-                        <span class=itemlogo> </span>
-                    </div>
-                </div> -->
-                <!-- <div class="tradecard"></div>
-                <div class="tradecard"></div>
-                <div class="tradecard"></div>
-                <div class="tradecard"></div>
-                <div class="tradecard"></div> -->
-
-            </div>
-                    
+        <div class="tab" onclick="displayPort()">
+          <img class="icon" src="icons/port.png">
+          <a class="text">PORTFOLIO</a>
         </div>
-        <script type="text/python" src="../src/backend_handler.py"></script>
-        <script src="ui_handler.js"></script>
-    </body>
+        <div class="tab" onclick="displayTrades()">
+          <img class="icon" src="icons/trades.png">
+          <a class="text">TRADES</a>
+        </div>
+        <div class="tab" onclick="ToggleItemWindow()">
+          <img class="icon" src="icons/add.png">
+          <a class="text">ADD ASSET</a>
+        </div>                     
+      </div>
+
+      <!-- OFFSET -->
+      <div style="width: 75px;"></div>
+      
+      <!-- PAGECONTAINER -->
+      <div class="container">        
+         
+        <!-- PORTFOLIO PAGE -->
+        <div class="Portcontainer" id="port_con">
+
+          <!-- <div>            
+            <div class="tradecard">
+              <div style="display: block; float:left; width: 75%;">
+                <span class="carditem">BITCOIN</span>
+                <span class="underline">BTC/INR</span>
+                <div class="itemVal" id="itemValParent">
+                  <span class="itemPrice" id="itemVal">47000 </span>
+                  <span class="pcLogo">⥮</span>
+                  <span class="itemPChange">7.77</span>
+                </div>
+                <span class=tradeqty id="tradeQty">SHARES : 150 </span>
+                <span class=tradeHold id="tradeVal" >HODL VALUE : </span>                
+                <div class="tots">
+                  <span class=totalcost id="tc">SPENT : 69420 </span>
+                  <div class=totalValCon>
+                    <span>PROFIT/LOSS : </span>                  
+                    <span id="_PL">12345</span>
+                  </div>
+                </div>
+              </div>
+              <div style="float: right; width:25%; height:50%;">
+                <img class="itemlogo" src="https://cryptoicon-api.vercel.app/api/icon/eth" alt="">
+              </div>
+            </div>
+          </div>       -->
+
+        </div>
+
+        <!-- TRADES PAGE -->
+        <div class="Tradecontainer" id="trade_con">
+
+          <div class="trades">
+            <ul id="trade_item_list">
+            </ul>
+          </div>
+
+          <div class="items" id="items_bar">
+            <!-- <img class="itemicon itemicon_overlay" src="https://cryptoicon-api.vercel.app/api/icon/eth"> -->
+          </div>            
+        </div>
+          
+      </div>
+
+    </div>
+
+    <!-- ADDITEM WINDOW -->
+    <div class="AddItemViewport" id="add_item_window">
+
+      <!-- ADD ITEM FORM -->
+      <div class="form">
+
+        <div style="padding: 1rem; display: inline-flex; flex-flow: row;">
+            <span style="width: 35%;">SHARES</span>
+            <input class="inputfield" type="text" placeholder="Enter Quantity" id="item_qty">
+        </div>
+        <div style="padding: 1rem; display: inline-flex; flex-flow: row;">
+            <span style="width: 35%; white-space:nowrap;">BUY PRICE</span>
+            <input class="inputfield" type="text" placeholder="Enter Price" id="item_price">
+        </div>
+
+        <div style="display: inline-flex; flex-flow:row;">
+          <div class="dropdown" id="ddlist_item" onmouseenter="toggle_dropdown('ddlist_item')" onmouseleave="toggle_dropdown('ddlist_item')">                    
+            <div class="dispText" id="item_select">CHOOSE AN ITEM </div>
+            <div class="ddlist" id="item_select_list">
+                <span class="dditem">BTC</span>
+                <span class="dditem">ETH</span>
+                <span class="dditem">ADA</span>
+                <span class="dditem">MATIC</span>
+                <span class="dditem">DOT</span>
+                <span class="dditem">LUNA</span>
+            </div>
+          </div>
+
+          <div class="dropdown" style="width: fit-content;" id="ddlist_cur" onmouseenter="toggle_dropdown('ddlist_cur')" onmouseleave="toggle_dropdown('ddlist_cur')">
+            <div class="dispText" id="cur_select">CUR</div>
+            <div class="ddlist" id="cur_select_list">
+                <span class="dditem">INR</span>
+                <span class="dditem">USD</span>
+                <span class="dditem">EUR</span>
+                <span class="dditem">USDT</span>
+                <span class="dditem">YUAN</span>                        
+            </div>
+            </div>                    
+          </div>
+      </div>
+      
+      <div style="display: inline-flex; flex-flow: row; margin-top: .5rem;">                
+        <div class="button" onclick="add_new_item()">ADD</div>
+        <div class="button close" onclick="ToggleItemWindow()">CLOSE</div>                
+      </div>
+
+    </div>
+
+  </body>
+
 </html>

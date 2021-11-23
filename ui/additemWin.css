@@ -1,0 +1,138 @@
+.dragbar{
+    background-color: rgb(32, 32, 32);
+    -webkit-app-region: drag;
+    width: 100%;
+    height: 2rem;
+    border-bottom: solid rgb(105, 40, 203) 1px;
+}
+
+.AddItemViewport{
+    width: 100%;
+    height: 0;    
+    display: inline-flex;    
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column;
+    visibility: hidden;
+    /* z-index: -10; */
+    position: absolute;
+    /* background-color: #3a3750; */    
+    background: radial-gradient(ellipse at center, #48434aad, #030303e8);
+    transition: ease-in-out .5s;
+}
+
+.AddItemViewport.active{
+    height: 100%;
+    transition: ease-in-out .5s;
+}
+
+.form{
+    margin: 1rem 1rem 1rem 1rem;
+    width: fit-content;
+    height: 10rem;
+    color: white;
+    display: inline-flex;
+    flex-flow: column;
+    padding: .5rem;
+    border: solid rgba(255, 255, 255, 0.233) 1px;
+    background-color: #3e4446;
+}
+
+.dropdown{
+    display: inline-flex;
+    flex-flow: column;
+    align-items: center;
+    width: 12rem;
+    height: 2.15rem;
+    background-color:rgba(61, 61, 61, 0.836);
+    transition: ease-in-out .5s;
+    position: relative;
+    overflow: hidden;        
+    margin: .5rem;
+    z-index: 10;
+}
+.dropdown.active{    
+    height: 10rem;    
+    transition: ease-in-out .5s;
+}
+
+.dropdown .dispText{
+    border: solid rgb(105, 40, 203) 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 1.5rem;
+    width: 100%;
+    padding: 0.5rem;
+    z-index: 10;
+}
+
+.ddlist{
+    width: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    display: inline-flex;
+    flex-flow: column;
+    background-color: #3a3750;
+    cursor: pointer;
+}
+
+.dditem{    
+    cursor: pointer;
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    padding: .25rem;
+    height: 2rem;
+    width: 100%;
+}
+.dditem:hover{
+    background-color: rgb(46, 104, 180);    
+}
+
+.button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 5rem;
+    height: 2rem;
+    margin: .5rem;
+    transition: ease-in-out .25s;
+    cursor: pointer;
+    background-color: rgb(59, 88, 216);
+    color: white;
+}
+.button:hover{
+    transition: ease-in-out .25s;
+    background-color: rgb(59, 166, 216);
+}
+
+.inputfield{
+    width: 65%;
+    padding: .25rem;
+    font-size: 1rem;
+    border-color: rgb(204, 204, 204);
+    border-top: inline #3e4446;
+    border-right: inline #3e4446;
+    border-bottom: inline #3e4446;
+    border-left: inline #3e4446;
+    color: white;
+    text-shadow: rgb(42 42 42 / 75%) 3px 0px 0px;
+    border-radius: 0px;
+    border-width: 0px;
+    border-style: hidden;
+    background-color:rgba(61, 61, 61, 0.836);    
+}
+
+.close{
+    background-color: rgb(165, 4, 4);
+}
+.close:hover{
+    background-color: rgb(214, 18, 18);
+}
+
+.inputfield:focus{
+    border: solid #5b59f1 1px;
+    outline: none !important;
+}
