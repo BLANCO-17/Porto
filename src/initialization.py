@@ -36,13 +36,14 @@ class User:
 
     def createUser(self):
         try:
+            os.mkdir("..\\data")
             os.mkdir("..\\data\\"+self.name)
             os.mkdir("..\\data\\"+self.name+"\\Trades")
             file = open("..\\data\\"+self.name+"\\log.dat", "w+")
             data = "{\"user\": \"bossman\", \"items\": []}"
             file.write(data)
             file.close()
-            print("User created.")
+            print("User folder created.")
         except Exception as e:
             print(e)
               

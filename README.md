@@ -4,13 +4,15 @@
 
 Investment Portfolio to record trades at one place.
 
+# IMPORTANT
+Before running app install all dependencies using 'npm install' in UI Folder.
 To run app simple run command 'npm start' in the ui folder.
 
 #ONLY CRYPTOCURRENCIES SUPPORTED AS OF YET.
 #TRADATIONAL STOCKS/FUNDS WILL BE ADDED SOMETIME IN THE FUTURE
 
-FEATURES at current Stage:
-# ADD CRYPTO ASSETS TO YOUR PORTFOLIO
-# LIVE PRICE CHANGE AND ASSET VALUE UPDATION
+# FEATURES at current Stage:
+1-> ADD CRYPTO ASSETS TO YOUR PORTFOLIO
+2-> LIVE PRICE CHANGE AND ASSET VALUE UPDATION
 
 
