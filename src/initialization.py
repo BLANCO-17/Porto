@@ -39,6 +39,8 @@ class User:
             os.mkdir("..\\data\\"+self.name)
             os.mkdir("..\\data\\"+self.name+"\\Trades")
             file = open("..\\data\\"+self.name+"\\log.dat", "w+")
+            data = "{\"user\": \"bossman\", \"items\": []}"
+            file.write(data)
             file.close()
             print("User created.")
         except Exception as e:

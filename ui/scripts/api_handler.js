@@ -24,10 +24,12 @@ function getUserData(){
     // });
 }
 
-function setItemDetails(item, data_list){    
-  document.getElementById(item.toLowerCase()+"_cost").textContent = "SPENT : "+data_list[item].cost;
+async function setItemDetails(item, data_list){    
+  var cur = await getItemCur(item);
+  document.getElementById(item.toLowerCase()+"_itemCurDet").textContent = item.toUpperCase()+"/"+cur.toUpperCase();
+  document.getElementById(item.toLowerCase()+"_cost").textContent = "SPENT : "+Number(data_list[item].cost).toFixed(2);
   document.getElementById(item.toLowerCase()+"_qty").textContent = "SHARES : "+data_list[item].shares;
-
+  
   let params = {        
     "item": item
       // "psd": "test123"
@@ -46,6 +48,7 @@ function setItemDetails(item, data_list){
     var totalcost=0;
     var qty=0;
     var itemprice = await getItemPrice(item);
+    
     itemprice = Number(itemprice).toFixed(2);
     var TotalValueBPerTrade=0;
     // console.log(data)
@@ -73,7 +76,7 @@ function setItemDetails(item, data_list){
   });
 }
 
-var createElements = function(items, currency=""){
+var createElements = function(items){
     var container = document.getElementById('port_con');
     all_items = [];
     document.getElementById('items_bar').innerHTML = "";
@@ -88,7 +91,7 @@ var createElements = function(items, currency=""){
                       <div class="tradecard" id="${element}_card">
                         <div style="display: block; float:left; width: 75%;">
                           <span class="carditem" id=${element.toLowerCase()}_itemname >${element}</span>
-                          <span class="underline">${element}/INR</span>
+                          <span class="underline" id="${element.toLowerCase()}_itemCurDet">${element}/</span>
                           <div class="itemVal" id="${element.toLowerCase()}_itemValParent">
                             <span class="itemPrice" id="${element.toLowerCase()}_itemVal"> </span>
                             <span class="pcLogo">⥮</span>
@@ -123,38 +126,47 @@ var createElements = function(items, currency=""){
 }
 
 function refreshItemPrice(){
-  
-    
-  all_items.forEach(element => {
+      
+  all_items.forEach( async (element) => {
 
-    // let url = "https://api.coinbase.com/v2/prices/"+element+"-USD/buy";
-    let url = "https://api.wazirx.com/sapi/v1/trades?symbol="+element.toLowerCase()+"usdt&limit=1"
-    // let url = "https://api.nomics.com/v1/currencies/ticker?key=6cef157eb2943ba698ad3453385dcfd7e94c2e31&ids="+element+"&convert=USD";
-    fetch(url)
-    .then(data => data.text())
-    .then((data) => {
-      data = JSON.parse(data)['0'];
-      // console.log(data);
-      document.getElementById(element+'_itemVal').textContent = data.price;      
-    });
+    try{
 
-    let p_url = "https://coincodex.com/api/coincodex/get_coin/"+element;
-    fetch(p_url)
-    .then(data => data.text())
-    .then((data) => {
-      data = JSON.parse(data);
-      var pc = Number(data.price_change_1D_percent).toFixed(2);
-      document.getElementById(element.toLowerCase()+"_tradePC").textContent = pc;
-      document.getElementById(element.toLowerCase()+"_itemname").textContent = data.coin_name;
-      if(pc < 0)
-      {
-        document.getElementById(element+"_itemValParent").style.color = "red";
-      }else{
-        document.getElementById(element+"_itemValParent").style.color = "limegreen";
-      }            
-      // console.log(Number(data.price_change_1D_percent).toFixed(2));
-    });
-    
+      let cur = await getItemCur(element);      
+      let url = "http://127.0.0.1:5000/getPrice?item="+element.toLowerCase()+"&cur="+cur.toUpperCase()
+      fetch(url)
+      .then(data => data.text())
+      .then((data) => {
+        data = JSON.parse(data)
+        document.getElementById(element+'_itemVal').textContent = data.price;
+
+        // data = JSON.parse(data)['0'];
+        // console.log(data.price)
+        // let qty = document.getElementById(element.toLowerCase()+"_qty").textContent;
+        // document.getElementById(element.toLowerCase()+"_tradeHodl").textContent = Number(qty) * Number(data.price)
+        // console.log(data);
+        
+      });
+
+      let p_url = "https://coincodex.com/api/coincodex/get_coin/"+element;
+      fetch(p_url)
+      .then(data => data.text())
+      .then((data) => {
+        data = JSON.parse(data);
+        var pc = Number(data.price_change_1D_percent).toFixed(2);
+        document.getElementById(element.toLowerCase()+"_tradePC").textContent = pc;
+        document.getElementById(element.toLowerCase()+"_itemname").textContent = data.coin_name;
+        if(pc < 0)
+        {
+          document.getElementById(element+"_itemValParent").style.color = "red";
+        }else{
+          document.getElementById(element+"_itemValParent").style.color = "limegreen";
+        }            
+        // console.log(Number(data.price_change_1D_percent).toFixed(2));
+      });
+      
+    } catch (error) {
+      console.log(error)
+    }
   });
 }
 
@@ -193,14 +205,25 @@ function setupTradePage_items(item){
   items_bar.appendChild(newItem);
 }
 
+async function getItemCur(item){
+  let cur = await fetch("http://127.0.0.1:5000/getItemCur?item="+item.toUpperCase())
+    .then(data => data.text())
+    .then((data) => {
+      return JSON.parse(data).cur;
+    });
+  return cur.toLowerCase();
+}
+
 async function getItemPrice(item){
   // let url = "https://api.coinbase.com/v2/prices/"+item.toLowerCase()+"-USD/buy";    
-  let url = "https://api.wazirx.com/sapi/v1/trades?symbol="+item.toLowerCase()+"usdt&limit=1"
+
+  let cur = await getItemCur(item);
+  let url = "http://127.0.0.1:5000/getPrice?item="+item.toLowerCase()+"&cur="+cur.toUpperCase();
   let price = await fetch(url)
     .then(data => data.text())
     .then((data) => {
-      data = JSON.parse(data)['0'];
-      // console.log(data);
+      data = JSON.parse(data);
+      console.log(data);
       return Number(data.price).toFixed(2);
     });
   return price;
@@ -213,7 +236,7 @@ function set_Item_trades(item){
 // item, cur, qty, buyprice
 function add_new_item(){
 
-  let item = document.getElementById('item_select').textContent;
+  let item = document.getElementById('item_select').value;
   let cur = document.getElementById('cur_select').textContent;
   let qty = Number(document.getElementById('item_qty').value).toFixed(3);
   let buyprice = Number(document.getElementById('item_price').value).toFixed(2);
@@ -245,20 +268,22 @@ function add_new_item(){
     refreshApp();
   });
   
+  ToggleItemWindow();
   
 }
 
 function refreshApp(){
-    
+ 
   let params = {        
     "user": "user"    
   };
-
+  
   let query = Object.keys(params)
-                 .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
-                 .join('&');
+  .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+  .join('&');
   
   let url = "http://127.0.0.1:5000/getUserItems?"+query;
+  
 
   fetch(url)
   .then(data => data.text())
@@ -267,13 +292,28 @@ function refreshApp(){
       var port = document.getElementById('port_con');
       port.innerHTML = "";
       createElements(data.items);
-  });
+  }).catch(error => {
+    console.log("waiting for backend...");
+    setTimeout(()=>{
+      refreshApp();
+      // console.log("bruh");
+    }, 3000);
+  });    
   
 }
 
-const ref = setInterval(refreshItemPrice, 3000);
-// const refa = setInterval(refreshApp, 3000);
 
+refreshApp();
+const ref = setInterval(refreshItemPrice, 10000);
+
+// while (true){
+//   const f = setInterval(()=>{
+//     console.log("delay done");
+//   }, 2000);
+// }
+
+
+// const refa = setInterval(refreshApp, 3000);
 // window.onload = function(){getUserData();}
 // getUserData();
-refreshApp();
+

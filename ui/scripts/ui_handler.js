@@ -83,7 +83,7 @@ window.onload = function(){
                 {
                     item.onclick = function(){
                         //console.log(item.textContent);                    
-                        document.getElementById('item_select').textContent = item.textContent;
+                        document.getElementById('item_select').value = item.textContent;
                     }
                 }else{
                     item.onclick = function(){

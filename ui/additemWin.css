@@ -64,8 +64,9 @@
     justify-content: center;
     height: 1.5rem;
     width: 100%;
-    padding: 0.5rem;
+    padding: 1rem;
     z-index: 10;
+    /* content: "ENTER OR SELECT ITEM"; */
 }
 
 .ddlist{

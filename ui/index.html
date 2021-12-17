@@ -10,7 +10,7 @@
     <script src="scripts/ui_handler.js"></script>
     <script src="scripts/api_handler.js"></script>
 
-    <div class="tbar glass">
+    <div class="tbar">
         <div class="dragbar"></div>
         <div class="barbtn" onclick="MinWindow()">&#10554</div>
         <div class="barbtn" onclick="MaxWindow()">&#10064</div>
@@ -114,7 +114,8 @@
 
         <div style="display: inline-flex; flex-flow:row;">
           <div class="dropdown" id="ddlist_item" onmouseenter="toggle_dropdown('ddlist_item')" onmouseleave="toggle_dropdown('ddlist_item')">                    
-            <div class="dispText" id="item_select">CHOOSE AN ITEM </div>
+            <input class="dispText inputfield" placeholder="Enter or Select Item" id="item_select">
+            
             <div class="ddlist" id="item_select_list">
                 <span class="dditem">BTC</span>
                 <span class="dditem">ETH</span>
@@ -122,17 +123,20 @@
                 <span class="dditem">MATIC</span>
                 <span class="dditem">DOT</span>
                 <span class="dditem">LUNA</span>
+                <span class="dditem">XRP</span>
+                <span class="dditem">XLM</span>
+                <span class="dditem">VET</span>
+                <span class="dditem">HBAR</span>
             </div>
           </div>
 
           <div class="dropdown" style="width: fit-content;" id="ddlist_cur" onmouseenter="toggle_dropdown('ddlist_cur')" onmouseleave="toggle_dropdown('ddlist_cur')">
-            <div class="dispText" id="cur_select">CUR</div>
+            <div class="dispText" style="padding: 0.5rem;" id="cur_select">CUR</div>
             <div class="ddlist" id="cur_select_list">
                 <span class="dditem">INR</span>
+                <span class="dditem">USDT</span>
                 <span class="dditem">USD</span>
                 <span class="dditem">EUR</span>
-                <span class="dditem">USDT</span>
-                <span class="dditem">YUAN</span>                        
             </div>
             </div>                    
           </div>

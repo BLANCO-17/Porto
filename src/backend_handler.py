@@ -1,9 +1,27 @@
 from flask import Flask, request, jsonify
 from initialization import User, Trades, checkTrade, LoadObject, getItems
-import pickle, json, sys, time, atexit, os
 from threading import Thread
+from priceExtQ import Queue
+from forex_python.converter import CurrencyRates
+import pickle, json, sys, time, atexit, os
 
 app = Flask(__name__)
+priceExtractors = {}
+myQueue = Queue()
+
+_LOGGED = False
+_FIATS = {}
+         
+
+def initialize():
+    global _FIATS
+    
+    c = CurrencyRates()    
+        
+    _FIATS['INR'] = c.get_rate('USD', 'INR')
+    _FIATS['EUR'] = c.get_rate('USD', 'EUR')
+    _FIATS['USDT'] = 1#c.get_rate('USD', 'USD')    
+    _FIATS['USD'] = 1#c.get_rate('USD', 'USD')    
 
 def addItem(user, item):
     file = open("..\\data\\user\\log.dat", "r")
@@ -25,23 +43,33 @@ def addItem(user, item):
     file.close()
     
 def closeApp():
+
+    myQueue.closeQ()
+    
     time.sleep(1)
     os._exit(0)
     # raise RuntimeError("shtting down")
     
+def getPriceFunc(coin):   
+    price = priceExtractors[coin].getPrice(coin)
+    print("output:",coin, price)
+    return {"price":price}
+
+
+initialize()
 
 @app.route("/")
 def home():
-    return "homepage"
+    return {"output": "started"}
 
 @app.route("/createTrade")
-def createTrade():
+def createTrade():    
+    
     data = request.args
     name = data.get("name")
     cur = data.get("CUR")
     cost = data.get("cost")
     share = data.get("shares")
-    # user = data.get("user")
 
     if not checkTrade(name, user="user"):
         tr = Trades(name, cur)
@@ -81,16 +109,67 @@ def getTotalDets():
     
 @app.route("/getUserItems")
 def getUserItems():
+    
+    global _LOGGED
+    
+    try:        
+        user = str(request.args.get('user'))    
+        itemlist = getItems("user")['items']
+        
+        # if(not _LOGGED):
+        #     i=0
+        #     for x in itemlist:
+        #         priceExtractors[str(x).lower()] = priceExtractor()
+            
+        #     _LOGGED = True        
+        
+        # print(priceExtractors)
+        return {"items": itemlist}
+    except:
+        return {"error" : "invalid user data request"}
 
-    user = str(request.args.get('user'))    
-    itemlist = getItems("user")['items']
     # print(itemlist)
     # for x in itemlist:
     #     print(cleanString(x))
     # out = [x.strip() for x in itemlist.split(',')]
     # print(out['items'].split(',')[0])
+
+@app.route('/getPrice')
+def getPrice():
+    global priceExtractors
     
-    return {"items": itemlist}
+    data = request.args
+    coin = data.get('item')
+    cur = data.get('cur')
+    # price = priceExtractors[coin].getPrice(coin)
+    myQueue.sendToQueue(coin)
+
+    if not myQueue.isRunning():
+        myQueue.callQueue()
+    
+    price = None
+    
+    while True:
+        price = myQueue.getPrice(coin)
+        
+        if price != None:
+            break
+        else:
+            time.sleep(1)
+        
+    price = round((_FIATS[cur] * price), 2)                                                                                                                                                                 
+        
+    # print(price, coin)
+    return {"price": price}
+    
+@app.route('/getItemCur')
+def getCur():
+    item = request.args.get('item')
+    
+    tr = pickle.load(open("..\data\\user\\Trades\\"+item+".dat", "rb"))
+    cur = tr.getCur()
+    
+    return{"cur":cur}
 
 @app.route('/systemcmds')
 def systemCMD():
@@ -103,5 +182,12 @@ def systemCMD():
         return {"output": "closing App - executed"}
         
 
-if __name__ == "__main__":       
+if __name__ == "__main__":
+    
+    try:
+        user = User("user", "1234")
+        user.createUser()
+    except:
+        pass       
+    
     app.run()

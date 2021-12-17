@@ -18,7 +18,7 @@ function createWindow () {
     win.setSize(1000, 600)
     win.loadFile('index.html')
     // win.webContents.openDevTools();
-    // uncommment above statement for console/debug access in app    
+    // uncommment statement above for console/debug access in app    
 
     op = {
         theme: 'dark',
@@ -27,8 +27,8 @@ function createWindow () {
         maximumRefreshRate: 60,
         disableOnBlur: false
      };
-    win.setVibrancy(op);
-
+    win.setVibrancy(op);    
+     
     ipcMain.on('minimize', () => {
         win.minimize()        
     });
@@ -41,7 +41,8 @@ function createWindow () {
     });
 };
 
+
 app.whenReady().then(() => {
-    createWindow()
+    createWindow();    
 });
 

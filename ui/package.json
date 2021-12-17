@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BrainXIX/Porto.git"
+    "url": "git+https://github.com/BLANCO-17/Porto.git"
   },
   "author": "Blanco",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/BrainXIX/Porto/issues"
+    "url": "https://github.com/BLANCO-17/Porto/issues"
   },
-  "homepage": "https://github.com/BrainXIX/Porto#readme",
+  "homepage": "https://github.com/BLANCO-17/Porto#readme",
   "devDependencies": {
     "electron": "^15.0.0"
   },
