@@ -6,6 +6,7 @@
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+import chromedriver_autoinstaller
 
 class priceExtractor:
     
@@ -17,9 +18,10 @@ class priceExtractor:
         self.option.add_argument('--no-sandbox')
         self.option.add_argument('--disable-dev-sh-usage') 
         self.option.add_experimental_option('excludeSwitches', ['enable-logging']) #comment this code if you want the webdriver logs in console
+        chromedriver_autoinstaller.install()
 
-        path=Service("C:\Program Files (x86)\ChromeDriver\chromedriver.exe")        
-        self.driver = webdriver.Chrome(service=path, options=self.option)
+        # path=Service("C:\Program Files (x86)\ChromeDriver\chromedriver.exe")        
+        self.driver = webdriver.Chrome(options=self.option)
             
     def getName(self, abv):
         
@@ -92,10 +94,6 @@ class priceExtractor:
         except:
             pass
     
-
-# pe = priceExtractor()
-# print(pe.getPrice('btc')) 
-
 
 #USAGE
 # pe = priceExtractor()
